@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b211a">
+<title>Sandbox Test — MOTD</title>
+<style>
+:root{--bg:#081a14;--panel:#10261e;--panel2:#163329;--line:rgba(164,215,175,.17);--text:#edf5eb;--muted:#acc5b1;--green:#a1dcb3;--gold:#e6cb8f;--hot:#f0a894}
+*{box-sizing:border-box}
+html,body{min-height:100%;margin:0}
+body{font:14px/1.5 "Segoe UI",Arial,sans-serif;background:radial-gradient(ellipse at 4% 7%,rgba(72,128,86,.24),transparent 50%),radial-gradient(ellipse at 100% 99%,rgba(134,116,65,.11),transparent 40%),var(--bg);color:var(--text)}
+button{font:inherit;cursor:pointer}
+.shell{max-width:1190px;margin:auto;padding:22px}
+.header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:0 0 18px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:13px}
+.logo{width:44px;height:44px;border-radius:13px;border:1px solid rgba(175,234,184,.35);background:linear-gradient(145deg,#1a4635,#0c281e);display:grid;place-items:center;box-shadow:inset 0 1px 0 #335a48}
+.logo svg{width:26px;height:26px}
+.brand-name{font-size:19px;font-weight:800;letter-spacing:.7px;line-height:1.25}
+.brand-name em{font-style:normal;color:var(--gold)}
+.sub{color:var(--muted);font-size:10px;letter-spacing:2px;margin-top:3px}
+.topright{display:flex;gap:13px;align-items:center}
+.pill{border:1px solid rgba(230,203,143,.35);background:rgba(230,203,143,.08);color:var(--gold);border-radius:40px;padding:5px 10px;font-size:11px;letter-spacing:.8px;font-weight:bold}
+.langs{display:flex;gap:4px;border:1px solid var(--line);border-radius:10px;padding:4px;background:#0b211a}
+.langs button{border:0;border-radius:7px;padding:6px 9px;background:transparent;color:var(--muted);font-weight:bold;font-size:11px}
+.langs button.active,.langs button:hover{background:#234a36;color:#fff}
+.layout{display:grid;grid-template-columns:215px minmax(0,1fr);gap:22px;margin-top:22px}
+.sidebar,.content{border:1px solid var(--line);background:rgba(14,38,28,.90);border-radius:19px}
+.sidebar{padding:16px;align-self:start}
+.kicker{font-size:10px;font-weight:700;letter-spacing:2px;color:var(--muted);padding:6px 11px 12px}
+.nav{display:flex;flex-direction:column;gap:5px}
+.nav button{border:1px solid transparent;background:transparent;color:#b6ccbd;text-align:left;padding:11px 12px;border-radius:10px;display:flex;align-items:center;gap:12px;font-weight:600}
+.nav button:hover{background:#17382a}
+.nav button.active{background:#204735;color:#ecfff0;border-color:rgba(150,214,171,.27)}
+.symbol{font-size:17px;width:23px;text-align:center}
+.sidebarbox{margin-top:23px;border-top:1px solid var(--line);padding:18px 11px 2px}
+.sidebarbox strong{display:block;color:var(--green);font-size:11px;letter-spacing:1px}
+.sidebarbox p{color:var(--muted);font-size:12px;line-height:1.7;margin:9px 0}
+.content{padding:29px 33px 33px;min-height:485px}
+section[hidden]{display:none}
+.eyebrow{font-size:11px;letter-spacing:2.4px;color:var(--green);font-weight:700;margin:0 0 11px}
+h1{font-size:clamp(30px,4vw,50px);line-height:1.1;letter-spacing:-1.4px;max-width:690px;margin:0 0 17px}
+h1 em{font-style:normal;color:var(--green)}
+.lead{color:#c8dbcf;font-size:15px;line-height:1.75;max-width:750px}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;margin:26px 0}
+.card{background:rgba(31,72,52,.38);border:1px solid var(--line);border-radius:14px;padding:18px}
+.card h3{margin:0 0 7px;font-size:16px}
+.card p{margin:0;color:var(--muted);font-size:12.5px;line-height:1.7}
+.cmd{font-family:Consolas,monospace;color:var(--gold);font-weight:700}
+.note{border-left:3px solid var(--gold);background:rgba(234,200,125,.08);color:#e6dfcd;padding:14px 16px;border-radius:0 10px 10px 0;margin-top:18px;line-height:1.7}
+h2{font-size:27px;line-height:1.2;margin:0 0 10px}
+.desc{color:var(--muted);margin:0 0 21px;line-height:1.65}
+.rulesgroup{margin:20px 0}
+.grouphead{display:flex;gap:10px;align-items:center;color:var(--green);font-size:12px;font-weight:750;letter-spacing:1.2px;padding:0 0 10px;border-bottom:1px solid var(--line)}
+.rule{display:grid;grid-template-columns:42px 1fr;gap:12px;padding:13px 0;border-bottom:1px solid rgba(166,212,172,.10)}
+.num{font-family:Consolas,monospace;font-size:12px;color:var(--gold)}
+.rule strong{display:block;margin-bottom:4px;font-size:14px}
+.rule p{margin:0;color:var(--muted);font-size:12.5px;line-height:1.55}
+.commandline{display:grid;grid-template-columns:135px 1fr;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}
+.commandline span{color:var(--muted)}
+footer{text-align:center;color:#789d89;font-size:11px;padding:18px 0}
+@media(max-width:760px){.shell{padding:12px}.header{flex-wrap:wrap}.layout{grid-template-columns:1fr;gap:12px;margin-top:12px}.sidebar{padding:9px}.nav{display:grid;grid-template-columns:repeat(4,1fr);gap:3px}.nav button{display:block;text-align:center;font-size:11px;padding:9px 3px}.symbol{display:block;margin:auto}.kicker,.sidebarbox{display:none}.content{padding:21px 17px;min-height:330px}.cards{grid-template-columns:1fr}.brand-name{font-size:16px}.topright{margin-left:auto}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <header class="header">
+    <div class="brand">
+      <div class="logo" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" stroke="#b9edc4" stroke-width="2.5" stroke-linejoin="round"><path d="M24 5 42 15v18L24 43 6 33V15Z"/><path d="m6 15 18 10 18-10M24 25v18"/><path d="m24 5 0 20"/></svg></div>
+      <div><div class="brand-name">SANDBOX <em>/</em> TEST</div><div class="sub">BUILD · PVP · CREATE</div></div>
+    </div>
+    <div class="topright"><span class="pill">BETA 0.1</span><div class="langs" aria-label="Language"><button data-lang="ru">RU</button><button data-lang="uk">UA</button><button data-lang="en">EN</button></div></div>
+  </header>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="kicker" data-t="menu">НАВИГАЦИЯ</div>
+      <div class="nav">
+        <button class="active" data-page="home"><span class="symbol">⌂</span><span data-t="homeTab">Главная</span></button>
+        <button data-page="rules"><span class="symbol">≡</span><span data-t="rulesTab">Правила</span></button>
+        <button data-page="commands"><span class="symbol">⌘</span><span data-t="commandsTab">Команды</span></button>
+        <button data-page="about"><span class="symbol">ⓘ</span><span data-t="aboutTab">О сервере</span></button>
+      </div>
+      <div class="sidebarbox"><strong>GM_BIGCITY_IMPROVED</strong><p data-t="sideText">Свободное строительство, Wiremod и PvP. Ранний публичный тест.</p></div>
+    </aside>
+    <main class="content">
+      <section data-section="home">
+        <p class="eyebrow" data-t="welcome">ДОБРО ПОЖАЛОВАТЬ НА СЕРВЕР</p>
+        <h1 data-t="heroHtml">Строй свободно.<br><em>Сражайся честно.</em></h1>
+        <p class="lead" data-t="intro">Здесь можно создавать базы, экспериментировать с Wiremod и играть в PvP. Мы стараемся сохранить свободу обычного Sandbox и честные правила для всех.</p>
+        <div class="cards">
+          <div class="card"><h3>▣ <span data-t="build">BUILD — строительство</span></h3><p data-t="buildInfo">Полёт и защита от урона. Строй в любой точке карты, но не вмешивайся в чужие сражения.</p></div>
+          <div class="card"><h3>⚔ <span data-t="pvp">PVP — сражения</span></h3><p data-t="pvpInfo">Обычный бой, базы и механизмы. Без полёта и преимуществ, полученных через Build.</p></div>
+        </div>
+        <div class="note" data-t="betaNote">Сервер находится в тестировании. Возможны изменения правил, перезапуски и исправления ошибок. Если обнаружишь проблему — сообщи администрации.</div>
+      </section>
+      <section data-section="rules" hidden>
+        <p class="eyebrow" data-t="rulesEye">ПРОЧИТАЙ ПЕРЕД ИГРОЙ</p>
+        <h2 data-t="rulesTitle">Правила сервера</h2>
+        <p class="desc" data-t="rulesIntro">Свобода строительства заканчивается там, где она мешает играть другим. Правила действуют для всех, включая администраторов.</p>
+        <div id="rulesHere"></div>
+      </section>
+      <section data-section="commands" hidden>
+        <p class="eyebrow" data-t="commandsEye">БЫСТРЫЙ СПРАВОЧНИК</p>
+        <h2 data-t="commandsTitle">Команды и клавиши</h2>
+        <p class="desc" data-t="commandsIntro">Вводи команды в игровой чат. Между режимами действуют задержки для честной игры.</p>
+        <div id="commandsHere"></div>
+      </section>
+      <section data-section="about" hidden>
+        <p class="eyebrow" data-t="aboutEye">ИНФОРМАЦИЯ О ПРОЕКТЕ</p>
+        <h2 data-t="aboutTitle">О Sandbox Test</h2>
+        <p class="lead" data-t="aboutIntro">Независимый Sandbox-сервер с Build, PvP, Wiremod и свободным строительством. Мы тестируем настройки вместе с игроками, чтобы сохранить интересную игру без постоянных ограничений.</p>
+        <div class="cards">
+          <div class="card"><h3 data-t="community">Сообщество</h3><p data-t="communityInfo">Русский, українська и English. Уважай других игроков независимо от языка.</p></div>
+          <div class="card"><h3 data-t="test">Тестирование</h3><p data-t="testInfo">Возможны баги, технические работы и настройка лимитов. Пока сервер в бете.</p></div>
+        </div>
+        <div class="note" data-t="help">Нужна помощь или хочешь сообщить об ошибке? Напиши администратору в игровом чате. Позже появится отдельная система жалоб.</div>
+      </section>
+    </main>
+  </div>
+  <footer>Sandbox Test · Garry's Mod · <span data-t="footer">Правила и интерфейс могут обновляться по мере тестирования.</span></footer>
+</div>
+<script>
+(function(){
+"use strict";
+var dict={
+ru:{
+menu:"НАВИГАЦИЯ",homeTab:"Главная",rulesTab:"Правила",commandsTab:"Команды",aboutTab:"О сервере",sideText:"Свободное строительство, Wiremod и PvP. Ранний публичный тест.",welcome:"ДОБРО ПОЖАЛОВАТЬ НА СЕРВЕР",heroHtml:"Строй свободно.<br><em>Сражайся честно.</em>",intro:"Здесь можно создавать базы, экспериментировать с Wiremod и играть в PvP. Мы стараемся сохранить свободу обычного Sandbox и честные правила для всех.",build:"BUILD — строительство",buildInfo:"Полёт и защита от урона. Строй в любой точке карты, но не вмешивайся в чужие сражения.",pvp:"PVP — сражения",pvpInfo:"Обычный бой, базы и механизмы. Без полёта и преимуществ, полученных через Build.",betaNote:"Сервер находится в тестировании. Возможны изменения правил, перезапуски и исправления ошибок. Если обнаружишь проблему — сообщи администрации.",rulesEye:"ПРОЧИТАЙ ПЕРЕД ИГРОЙ",rulesTitle:"Правила сервера",rulesIntro:"Свобода строительства заканчивается там, где она мешает играть другим. Правила действуют для всех, включая администраторов.",commandsEye:"БЫСТРЫЙ СПРАВОЧНИК",commandsTitle:"Команды и клавиши",commandsIntro:"Вводи команды в игровой чат. Между режимами действуют задержки для честной игры.",aboutEye:"ИНФОРМАЦИЯ О ПРОЕКТЕ",aboutTitle:"О Sandbox Test",aboutIntro:"Независимый Sandbox-сервер с Build, PvP, Wiremod и свободным строительством. Мы тестируем настройки вместе с игроками, чтобы сохранить интересную игру без постоянных ограничений.",community:"Сообщество",communityInfo:"Русский, українська и English. Уважай других игроков независимо от языка.",test:"Тестирование",testInfo:"Возможны баги, технические работы и настройка лимитов. Пока сервер в бете.",help:"Нужна помощь или хочешь сообщить об ошибке? Напиши администратору в игровом чате. Позже появится отдельная система жалоб.",footer:"Правила и интерфейс могут обновляться по мере тестирования.",
+groups:[["01 / ОБЩИЕ",[
+["Никаких читов","Запрещены читы, обходы запретов, уязвимости и намеренное получение нечестного преимущества."],
+["Не ломай сервер","Запрещены намеренные краши, лаг-машины, спам пропами, вредоносные дубликаты и перегрузка физики."],
+["Не закрывай спавн","Нельзя блокировать зоны появления игроков и выходы с них, а также мешать людям появляться на карте."]]],
+["02 / BUILD И PVP",[
+["Не мешай другому режиму","Игрокам Build нельзя мешать PvP, а участникам PvP — преследовать и мешать строителям."],
+["Без проп-пуша и проп-блока","Запрещено специально толкать, зажимать и перемещать игроков пропами в обход игровых правил."],
+["Не используй Build для преимущества в PvP","Нельзя атаковать из защищённого режима или применять объекты строителя для обхода ограничений боя."],
+["Сражайся честно","Не используй невидимые и практически неуязвимые средства атаки, эксплойты моделей и коллизии."]]],
+["03 / WIREMOD И ТЕХНИКА",[
+["Без нечестного слежения через E2","Запрещены скрипты, раскрывающие местоположение игроков через стены и обходящие ограничения обзора."],
+["Без перегружающих механизмов","Не создавай E2, турели, транспорт и дроны, которые намеренно создают лаги или недоступны для нормального противодействия."]]],
+["04 / ОБЩЕНИЕ И АДМИНИСТРАЦИЯ",[
+["Уважай игроков","Без травли, угроз, оскорбительного преследования, спама чата и звука на всю карту."],
+["Админские права — не преимущество","Администраторы обязаны соблюдать правила PvP; злоупотребление полномочиями запрещено."],
+["Нашёл ошибку — сообщи","Не используй уязвимости против других. Сообщай о серьёзных проблемах администрации."]]]
+],
+cmds:[["!build","Перейти в Build; включается после задержки."],["!pvp","Вернуться в PvP и на точку появления."],["!mode","Проверить текущий режим."],["!hud","Включить или скрыть индикатор режима."],["!motd","Снова открыть это окно с правилами."],["V","Включить или выключить полёт в Build."],["Q","Открыть меню строительства."],["C","Открыть контекстное меню."]]
+},
+uk:{
+menu:"НАВІГАЦІЯ",homeTab:"Головна",rulesTab:"Правила",commandsTab:"Команди",aboutTab:"Про сервер",sideText:"Вільне будівництво, Wiremod та PvP. Раннє публічне тестування.",welcome:"ЛАСКАВО ПРОСИМО НА СЕРВЕР",heroHtml:"Будуй вільно.<br><em>Бийся чесно.</em>",intro:"Тут можна будувати бази, експериментувати з Wiremod та грати в PvP. Ми хочемо зберегти свободу класичного Sandbox і чесні правила для всіх.",build:"BUILD — будівництво",buildInfo:"Політ і захист від шкоди. Будуй будь-де на мапі, але не втручайся в чужі бої.",pvp:"PVP — бої",pvpInfo:"Звичайні бої, бази та механізми. Без польоту й переваг, отриманих через Build.",betaNote:"Сервер тестується. Можливі зміни правил, перезапуски та виправлення помилок. Помітив проблему — повідом адміністрацію.",rulesEye:"ПРОЧИТАЙ ПЕРЕД ГРОЮ",rulesTitle:"Правила сервера",rulesIntro:"Свобода будівництва закінчується там, де вона заважає іншим. Правила діють для всіх, включно з адміністраторами.",commandsEye:"ШВИДКА ДОВІДКА",commandsTitle:"Команди та клавіші",commandsIntro:"Вводь команди в ігровий чат. Перемикання режимів має затримки для чесної гри.",aboutEye:"ІНФОРМАЦІЯ ПРО ПРОЄКТ",aboutTitle:"Про Sandbox Test",aboutIntro:"Незалежний Sandbox-сервер із Build, PvP, Wiremod і вільним будівництвом. Ми тестуємо налаштування разом із гравцями, щоб зберегти цікаву гру без зайвих обмежень.",community:"Спільнота",communityInfo:"Українська, русский та English. Поважай інших гравців незалежно від мови.",test:"Тестування",testInfo:"Можливі помилки, технічні роботи та зміна лімітів. Сервер ще у бета-тесті.",help:"Потрібна допомога або знайшов помилку? Напиши адміністратору в ігровому чаті. Згодом з'явиться окрема система скарг.",footer:"Правила та інтерфейс можуть змінюватися під час тестування.",
+groups:[["01 / ЗАГАЛЬНІ",[
+["Жодних чітів","Заборонені чіти, обхід заборон, експлойти та навмисне здобуття нечесної переваги."],
+["Не ламай сервер","Заборонені навмисні краші, лаг-машини, спам пропами, шкідливі дуплікати й перевантаження фізики."],
+["Не перекривай спавн","Не можна блокувати точки появи гравців і виходи з них або заважати гравцям з'являтися на мапі."]]],
+["02 / BUILD І PVP",[
+["Не заважай іншому режиму","Гравцям Build не можна заважати PvP, а учасникам PvP — переслідувати будівельників."],
+["Без проп-пушу та проп-блоку","Не можна навмисно штовхати, затискати й переміщувати гравців пропами в обхід правил."],
+["Не здобувай перевагу в PvP через Build","Не можна атакувати з захищеного режиму чи застосовувати об'єкти будівельника для обходу обмежень."],
+["Бийся чесно","Не використовуй невидимі чи практично невразливі засоби нападу та експлойти моделей і колізій."]]],
+["03 / WIREMOD І ТЕХНІКА",[
+["Без нечесного стеження через E2","Заборонені скрипти, що показують місця гравців крізь стіни та обходять обмеження огляду."],
+["Без механізмів, що перевантажують сервер","Не створюй E2, турелі, транспорт чи дрони, що навмисно спричиняють лаги або проти яких неможливо нормально грати."]]],
+["04 / СПІЛКУВАННЯ І АДМІНІСТРАЦІЯ",[
+["Поважай гравців","Без цькування, погроз, цілеспрямованого переслідування та спаму чату чи звуку на всю мапу."],
+["Адмінські права — не перевага","Адміністратори теж дотримуються правил PvP. Зловживання повноваженнями заборонене."],
+["Знайшов помилку — повідом","Не використовуй вразливості проти інших. Повідом про серйозні проблеми адміністрації."]]]
+],
+cmds:[["!build","Перейти в Build після короткої затримки."],["!pvp","Повернутися до PvP та точки появи."],["!mode","Перевірити поточний режим."],["!hud","Показати або приховати індикатор режиму."],["!motd","Знову відкрити це вікно з правилами."],["V","Увімкнути або вимкнути політ у Build."],["Q","Відкрити меню будівництва."],["C","Відкрити контекстне меню."]]
+},
+en:{
+menu:"NAVIGATION",homeTab:"Overview",rulesTab:"Rules",commandsTab:"Commands",aboutTab:"About",sideText:"Creative building, Wiremod and PvP. Early public test.",welcome:"WELCOME TO THE SERVER",heroHtml:"Build freely.<br><em>Fight fairly.</em>",intro:"Build bases, experiment with Wiremod and enjoy PvP. We aim to preserve classic Sandbox freedom with fair rules for everyone.",build:"BUILD — creativity",buildInfo:"Flight and damage protection. Build anywhere on the map, but do not interfere with ongoing fights.",pvp:"PVP — combat",pvpInfo:"Normal combat, bases and contraptions. No noclip or advantages gained through Build.",betaNote:"This server is in testing. Rules, settings and maps may change and restarts may happen. Please report serious issues to staff.",rulesEye:"PLEASE READ BEFORE PLAYING",rulesTitle:"Server rules",rulesIntro:"Freedom to build ends where it prevents others from enjoying the game. Rules apply to staff too.",commandsEye:"QUICK REFERENCE",commandsTitle:"Commands and keys",commandsIntro:"Enter commands in game chat. Switching modes has delays to keep combat fair.",aboutEye:"ABOUT THE PROJECT",aboutTitle:"About Sandbox Test",aboutIntro:"An independent Garry's Mod Sandbox server with Build, PvP, Wiremod and freeform building. We test settings with players to make a fun game without needless restrictions.",community:"Community",communityInfo:"English, українська and русский. Respect players regardless of their language.",test:"Testing",testInfo:"Bugs, maintenance and changing limits are possible during the beta.",help:"Need help or found an issue? Tell an administrator in game chat. A dedicated report system may be added later.",footer:"Rules and interface may change during testing.",
+groups:[["01 / GENERAL",[
+["No cheats","No cheating, bypassing restrictions, exploits or intentional unfair advantages."],
+["Do not crash the server","No intentional crashes, lag machines, prop spam, malicious dupes or physics overloads."],
+["Keep the spawn clear","Do not obstruct spawn areas, exits or other players' ability to join the map."]]],
+["02 / BUILD AND PVP",[
+["Respect both modes","Build players must not disrupt PvP, and PvP players must not harass builders."],
+["No prop pushing or blocking","Do not deliberately shove, trap or move players with props to bypass game rules."],
+["No Build advantage in PvP","Do not attack from protected mode or use builder-owned objects to bypass combat restrictions."],
+["Fair fighting","No invisible or effectively invulnerable attack devices, model or collision exploits."]]],
+["03 / WIREMOD AND VEHICLES",[
+["No unfair E2 tracking","No scripts revealing player locations through walls or bypassing line-of-sight rules."],
+["No server-heavy contraptions","Do not create E2 chips, turrets, vehicles or drones designed to cause lag or prevent reasonable counterplay."]]],
+["04 / CHAT AND STAFF",[
+["Respect others","No harassment, threats, targeted abuse, chat spam or map-wide audio spam."],
+["Staff powers are not a combat bonus","Admins must follow PvP rules too. Abuse of staff permissions is prohibited."],
+["Report serious bugs","Do not use exploits against others. Tell staff about major issues."]]]
+],
+cmds:[["!build","Enter Build mode after a short delay."],["!pvp","Return to PvP and respawn."],["!mode","Show your current game mode."],["!hud","Show or hide the mode indicator."],["!motd","Reopen this rules window."],["V","Toggle noclip while in Build."],["Q","Open the spawn menu."],["C","Open the context menu."]]
+}
+};
+var page="home";
+var lang="ru";
+function chooseLang(l){
+ lang=dict[l]?l:"en";
+ document.documentElement.lang=lang;
+ var tr=dict[lang];
+ document.querySelectorAll("[data-t]").forEach(function(node){var k=node.getAttribute("data-t");if(k==="heroHtml")node.innerHTML=tr[k];else node.textContent=tr[k]||""});
+ document.querySelectorAll("[data-lang]").forEach(function(btn){btn.classList.toggle("active",btn.getAttribute("data-lang")===lang)});
+ var target=document.getElementById("rulesHere");target.textContent="";
+ tr.groups.forEach(function(group){
+  var wrap=document.createElement("div");wrap.className="rulesgroup";
+  var top=document.createElement("div");top.className="grouphead";top.textContent=group[0];wrap.appendChild(top);
+  group[1].forEach(function(r,i){
+    var item=document.createElement("div");item.className="rule";
+    var num=document.createElement("div");num.className="num";num.textContent=("0"+(i+1)).slice(-2);
+    var box=document.createElement("div");var title=document.createElement("strong");title.textContent=r[0];var p=document.createElement("p");p.textContent=r[1];box.appendChild(title);box.appendChild(p);item.appendChild(num);item.appendChild(box);wrap.appendChild(item);
+  });
+  target.appendChild(wrap);
+ });
+ var commands=document.getElementById("commandsHere");commands.textContent="";
+ tr.cmds.forEach(function(c){
+  var row=document.createElement("div");row.className="commandline";
+  var code=document.createElement("b");code.className="cmd";code.textContent=c[0];
+  var desc=document.createElement("span");desc.textContent=c[1];
+  row.appendChild(code);row.appendChild(desc);commands.appendChild(row);
+ });
+}
+function setPage(p){
+ page=p;
+ document.querySelectorAll("[data-section]").forEach(function(el){el.hidden=el.getAttribute("data-section")!==p});
+ document.querySelectorAll("[data-page]").forEach(function(el){el.classList.toggle("active",el.getAttribute("data-page")===p)});
+ window.scrollTo(0,0);
+}
+document.querySelectorAll("[data-lang]").forEach(function(b){b.addEventListener("click",function(){chooseLang(b.getAttribute("data-lang"))})});
+document.querySelectorAll("[data-page]").forEach(function(b){b.addEventListener("click",function(){setPage(b.getAttribute("data-page"))})});
+var code=(navigator.language||"ru").toLowerCase();
+chooseLang(code.indexOf("uk")===0?"uk":code.indexOf("ru")===0?"ru":"en");
+setPage("home");
+})();
+</script>
+</body>
+</html>

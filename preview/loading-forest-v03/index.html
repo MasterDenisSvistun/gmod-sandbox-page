@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#071a12">
+<title>Sandbox Test — Forest Loading v0.3 Preview</title>
+<style>
+:root{--shade:.77;--accent:#a6d7ae;--gold:#e3ca8e}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:#061811;color:#f0f5ef;font-family:"Segoe UI",Arial,sans-serif}
+body{overflow-x:hidden}
+.scene{position:fixed;inset:0;overflow:hidden;pointer-events:none}
+.layer{position:absolute;inset:-3%;background-size:cover;background-position:center;opacity:0;transition:opacity 2.3s ease;transform:scale(1.12);will-change:transform,opacity}
+.layer.active{opacity:1;animation:zoomout 12s linear forwards}
+.layer.scene0{background:radial-gradient(ellipse at 65% 30%,rgba(97,161,109,.27),transparent 40%),linear-gradient(115deg,#244532,#113322 39%,#0a2319)}
+.layer.scene1{background:radial-gradient(ellipse at 34% 34%,rgba(87,137,112,.24),transparent 45%),linear-gradient(125deg,#143726,#213b2a 52%,#061710)}
+.layer.scene2{background:radial-gradient(ellipse at 67% 22%,rgba(150,174,113,.20),transparent 45%),linear-gradient(120deg,#183a29,#092419 57%,#283a1e)}
+@keyframes zoomout{from{transform:scale(1.12)}to{transform:scale(1.00)}}
+.trees{position:absolute;inset:0;opacity:.37;pointer-events:none;background:
+linear-gradient(150deg,transparent 42%,#071b14 42% 58%,transparent 58%) 0 27%/135px 320px repeat-x,
+linear-gradient(210deg,transparent 43%,#071b14 43% 58%,transparent 58%) 0 27%/135px 320px repeat-x,
+linear-gradient(150deg,transparent 42%,#0b291c 42% 58%,transparent 58%) 45px 42%/173px 290px repeat-x,
+linear-gradient(210deg,transparent 43%,#0b291c 43% 58%,transparent 58%) 45px 42%/173px 290px repeat-x
+}
+.veil{position:absolute;inset:0;background:rgba(0,12,6,var(--shade))}
+.scene:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(0,15,7,.4),transparent 70%),radial-gradient(ellipse at 100% 100%,rgba(0,0,0,.45),transparent 45%)}
+.glow{position:fixed;inset:-20%;pointer-events:none;background:radial-gradient(ellipse at 12% 15%,rgba(87,171,114,.09),transparent 43%);animation:drift 15s ease-in-out infinite alternate}
+@keyframes drift{from{transform:translate(-2%,1%)}to{transform:translate(6%,-4%)}}
+.shell{max-width:1440px;min-height:100vh;margin:auto;padding:37px 55px 150px;position:relative;z-index:1}
+header{display:flex;justify-content:space-between;align-items:center;gap:14px;padding-bottom:18px;border-bottom:1px solid rgba(167,218,170,.2)}
+.brand{display:flex;align-items:center;gap:13px}.brand svg{width:39px;height:42px;filter:drop-shadow(0 4px 12px rgba(111,150,88,.26))}
+.brand b{font-size:22px;letter-spacing:1.3px}.brand b em{font-style:normal;color:var(--gold)}.brand small{display:block;letter-spacing:1.7px;color:#b5cdb9;font-size:10px}
+.beta{color:#e6ce9b;border:1px solid rgba(227,205,145,.42);border-radius:8px;background:rgba(22,34,20,.65);font-size:11px;font-weight:700;padding:9px 13px;letter-spacing:.9px}
+.grid{display:grid;grid-template-columns:1.1fr .94fr;gap:60px;align-items:center;margin-top:clamp(22px,6vh,66px)}
+.eyebrow{color:var(--accent);font-size:12px;letter-spacing:2.8px;font-weight:bold}
+h1{font-size:clamp(52px,5.7vw,85px);line-height:1.02;letter-spacing:-3px;margin:20px 0;color:#edf6eb;text-shadow:0 2px 16px #0b2116}
+h1 span{color:#a0d5ab}.intro{font-size:16px;color:#c0d1c1;max-width:570px;line-height:1.8}
+.modes{display:flex;gap:10px;flex-wrap:wrap;margin:25px 0 30px}
+.modes span{padding:9px 14px;font-size:12px;background:rgba(26,65,44,.7);border:1px solid rgba(172,211,175,.3);border-radius:7px}
+.modes b{color:var(--gold);font:700 12px Consolas,monospace}
+.loading{max-width:530px;padding:18px 20px;border-radius:10px;border:1px solid rgba(145,219,168,.25);background:rgba(5,30,19,.79)}
+.loadtitle{display:flex;align-items:center;gap:9px;letter-spacing:1.4px;font-size:11px;font-weight:800;color:#bfe0c7}
+.spinner{height:18px;width:18px;display:inline-block;border-radius:100%;border:2px solid rgba(155,216,160,.3);border-top-color:#a7e2b5;animation:spin .9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.progress{height:5px;background:rgba(163,228,168,.16);border-radius:8px;overflow:hidden;margin:14px 0 10px}
+.fill{width:22%;height:100%;background:linear-gradient(90deg,#56946d,#b0e7b5);transition:width .5s}
+.status{display:flex;justify-content:space-between;gap:10px;color:#a3c0ac;font-size:11px}
+.rules{border:1px solid rgba(166,219,174,.2);border-radius:13px;padding:24px 25px 22px;background:rgba(7,29,20,.78);backdrop-filter:blur(7px)}
+.rulehead{display:flex;justify-content:space-between;gap:12px;align-items:center}
+.rules h2{font-size:28px;letter-spacing:-.7px;margin:4px 0 12px}
+.rulehead small{color:#b8caaf;border:1px solid rgba(153,211,171,.24);padding:6px 10px;border-radius:6px}
+.rule{display:grid;grid-template-columns:27px 1fr;gap:10px;border-top:1px solid rgba(151,216,162,.15);padding:13px 0}
+.rule .n{color:var(--gold);font:700 12px Consolas,monospace}
+.rule strong{font-size:13px;color:#e6f3e5}
+.rule p{font-size:12px;color:#a8c5b0;margin:5px 0 0;line-height:1.52}
+.bottomleft{margin-top:16px;font-size:11px;line-height:1.6;color:#9eb9a4}
+.footer{position:absolute;bottom:80px;left:55px;right:290px;border-top:1px solid rgba(173,222,174,.17);padding-top:12px;color:#9fbbab;font-size:10.5px}
+.previewbar{position:relative;z-index:5;max-width:1440px;margin:0 auto 35px;padding:16px 20px;background:#102a1d;border:1px solid #315f42;border-radius:10px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.previewbar strong{color:#d5ebd8}.previewbar label{font-size:12px;color:#bdd9c4}.previewbar input[type=range]{accent-color:#8aca9e;vertical-align:middle}
+.previewbar input[type=file]{color:#d0e7d5;font-size:11px;max-width:225px}
+.previewbar small{color:#9ebaab}
+.previewbar button{border:1px solid #467956;border-radius:7px;background:#214f34;color:#e7f1e9;padding:8px 12px}
+.previewbar button:hover{background:#306a46}
+.previewtag{position:fixed;top:4px;right:6px;color:#a6bcb0;z-index:10;font-size:10px;opacity:.7}
+@media (max-width:1000px){.shell{padding:22px 25px 138px}.grid{grid-template-columns:1fr;gap:21px;align-items:start}.rules{max-width:none}.footer{left:25px}.brand b{font-size:17px}h1{font-size:52px}}
+@media (max-width:620px){.shell{padding:14px 12px 140px}header{gap:9px}.brand b{font-size:14px}.brand svg{width:27px}.beta{font-size:9px;padding:7px}h1{font-size:39px;letter-spacing:-1px}.intro{font-size:13px}.rules{padding:13px}.rule{padding:9px 0}.rules h2{font-size:21px}.loading{padding:12px}.footer{left:12px;right:12px;bottom:100px}.previewbar{border-radius:0}.status{font-size:10px}}
+</style>
+</head>
+<body>
+<div class="scene">
+ <div class="layer scene0 active" id="layer0"></div>
+ <div class="layer scene1" id="layer1"></div>
+ <div class="trees" id="trees"></div>
+ <div class="veil"></div>
+</div>
+<div class="glow"></div>
+<div class="shell">
+  <header>
+    <div class="brand">
+      <svg viewBox="0 0 54 62" aria-hidden="true"><path d="M8 28Q5 8 27 6Q50 7 47 28Z" fill="#ba8159" stroke="#e6d5af" stroke-width="2"/><path d="M10 28Q27 34 47 28" stroke="#edd9ba" stroke-width="3" fill="none"/><path d="M23 30Q27 33 32 30L33 51Q36 57 21 57Z" fill="#e7d5b1"/><circle cx="18" cy="18" r="3" fill="#e9dcb6"/><circle cx="35" cy="20" r="4" fill="#e9dcb6"/></svg>
+      <div><b>SANDBOX <em>/</em> TEST</b><small>FOREST · BUILD · PVP</small></div>
+    </div>
+    <span class="beta">● BETA · ТЕСТИРОВАНИЕ</span>
+  </header>
+  <main class="grid">
+    <div>
+      <p class="eyebrow">СВОБОДА СТРОИТЬ · ЧЕСТНЫЙ БОЙ</p>
+      <h1>Строй.<br><span>Исследуй.</span><br>Сражайся.</h1>
+      <p class="intro">Собирай механизмы в Wiremod, строй базы и воюй по честным правилам. Здесь приветствуют творчество, а не ограничения ради ограничений.</p>
+      <div class="modes"><span><b>!build</b> · строительство</span><span><b>!pvp</b> · сражения</span><span><b>!hud</b> · интерфейс</span></div>
+      <div class="loading">
+        <div class="loadtitle"><span class="spinner"></span><span id="status">ПОДКЛЮЧЕНИЕ К СЕРВЕРУ</span></div>
+        <div class="progress"><div class="fill" id="fill"></div></div>
+        <div class="status"><span id="files">Подготовка файлов…</span><span id="map">gm_bigcity_improved</span></div>
+      </div>
+      <p class="bottomleft">Мы тестируем сервер вместе с игроками. Нашёл серьёзную ошибку — сообщи администрации.</p>
+    </div>
+    <div class="rules">
+      <div class="rulehead"><div><small>ПЕРЕД ИГРОЙ</small><h2>Главные правила</h2></div><small>01—06</small></div>
+      <div class="rule"><span class="n">01</span><div><strong>Без читов и нечестного PvP</strong><p>Не используй запрещённые модификации, радары через стены и неуязвимые боевые конструкции.</p></div></div>
+      <div class="rule"><span class="n">02</span><div><strong>Не ломай сервер</strong><p>Запрещены краши, лаг-машины, спам пропами и вредоносные дубликаты.</p></div></div>
+      <div class="rule"><span class="n">03</span><div><strong>Build и PvP — отдельно</strong><p>Строители не мешают боям, а участники PvP — строителям. Не обходи правила через Build.</p></div></div>
+      <div class="rule"><span class="n">04</span><div><strong>Не перекрывай спавн</strong><p>Не блокируй зоны появления, выходы и проходы для других игроков.</p></div></div>
+      <div class="rule"><span class="n">05</span><div><strong>Уважай игроков</strong><p>Без травли, массового спама, злоупотребления звуком и преследования.</p></div></div>
+      <div class="rule"><span class="n">06</span><div><strong>Ошибки сообщай администрации</strong><p>Не используй найденные уязвимости против других игроков.</p></div></div>
+    </div>
+  </main>
+  <div class="footer">SANDBOX FOREST · ТЕСТОВАЯ ВЕРСИЯ · ПОЛНЫЕ ПРАВИЛА: !motd</div>
+</div>
+<div class="previewbar">
+  <strong>🎬 Loading Studio V0.3 — предпросмотр</strong>
+  <label>Затемнение <input type="range" min="25" max="95" value="77" id="shade"> <output id="shadevalue">77%</output></label>
+  <label>Свои скриншоты (до 6) <input type="file" accept="image/jpeg,image/png,image/webp" multiple id="photos"></label>
+  <button id="clear" type="button">Убрать фотографии</button>
+  <small>Файлы остаются на твоём компьютере: это локальный предпросмотр. В игровом loading кнопок не будет.</small>
+</div>
+<div class="previewtag">DESIGN PREVIEW · NOT LIVE</div>
+<script>
+(function(){
+ var shade=document.getElementById("shade"),shadevalue=document.getElementById("shadevalue");
+ shade.addEventListener("input",function(){document.documentElement.style.setProperty("--shade",(Number(shade.value)/100).toFixed(2));shadevalue.textContent=shade.value+"%"});
+ var sources=[],urls=[],i=0,front=0,layers=[document.getElementById("layer0"),document.getElementById("layer1")];
+ function imageAt(index){return sources.length?sources[index%sources.length]:null}
+ function showNext(){
+  i++;var next=1-front,src=imageAt(i);
+  layers[next].className="layer "+(sources.length?"":"scene"+(i%3));
+  layers[next].style.backgroundImage=src?'url("'+src+'")':"";
+  layers[next].style.opacity="0";
+  void layers[next].offsetWidth;
+  layers[next].classList.add("active");
+  layers[front].classList.remove("active");
+  front=next;
+  document.getElementById("trees").style.display=sources.length?"none":"block";
+ }
+ document.getElementById("photos").addEventListener("change",function(ev){
+  urls.forEach(function(u){URL.revokeObjectURL(u)});urls=[];sources=[];
+  Array.prototype.slice.call(this.files,0,6).forEach(function(f){if(f.type.indexOf("image/")===0){var url=URL.createObjectURL(f);urls.push(url);sources.push(url)}});
+  i=0;
+  if(sources.length){layers.forEach(function(l){l.style.backgroundImage=""});layers[front].style.backgroundImage='url("'+sources[0]+'")';document.getElementById("trees").style.display="none"}
+ });
+ document.getElementById("clear").addEventListener("click",function(){urls.forEach(function(u){URL.revokeObjectURL(u)});urls=[];sources=[];i=0;document.getElementById("photos").value="";layers[front].style.backgroundImage="";layers[front].className="layer scene0 active";document.getElementById("trees").style.display="block"});
+ setInterval(showNext,11000);
+ var loaded=0,total=0;
+ window.GameDetails=function(servername,serverurl,mapname){if(mapname)document.getElementById("map").textContent=String(mapname).slice(0,80)};
+ window.SetStatusChanged=function(text){if(text)document.getElementById("status").textContent=String(text).slice(0,60)};
+ window.SetFilesTotal=function(n){if(Number(n)>0){total=Number(n);update()}};
+ window.SetFilesNeeded=function(n){if(Number(n)>=0){loaded=total-Number(n);update()}};
+ window.DownloadingFile=function(name){if(name)document.getElementById("files").textContent=String(name).slice(0,65)};
+ function update(){if(total>0){document.getElementById("files").textContent=Math.max(0,loaded)+" / "+total;document.getElementById("fill").style.width=Math.min(100,Math.max(2,loaded/total*100))+"%"}}
+})();
+</script>
+</body>
+</html>

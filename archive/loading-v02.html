@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b211b">
+<title>Sandbox Test — Build / PvP</title>
+<style>
+    :root { --bg:#091c17; --bg2:#102b23; --panel:rgba(20,45,37,.86); --panel2:rgba(10,32,26,.80); --line:rgba(161,206,181,.19); --ink:#e9f1e7; --muted:#a0b7a9; --green:#a9ddb2; --green2:#61aa88; --gold:#e5ca86; }
+    *{box-sizing:border-box}
+    html{min-height:100%;background:var(--bg)}
+    body{margin:0;min-height:100vh;color:var(--ink);font-family:Inter,"Segoe UI",Arial,sans-serif;background:radial-gradient(ellipse at 17% 7%,rgba(45,112,74,.29),transparent 45%),radial-gradient(ellipse at 100% 90%,rgba(119,124,55,.11),transparent 38%),linear-gradient(130deg,#0a2019,#091913 70%,#0a1e18);overflow-x:hidden}
+    body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.18;background-image:linear-gradient(rgba(190,231,200,.09) 1px,transparent 1px),linear-gradient(90deg,rgba(190,231,200,.09) 1px,transparent 1px);background-size:48px 48px;mask-image:linear-gradient(180deg,black,transparent 75%)}
+    .orb{position:fixed;width:520px;height:520px;top:-275px;right:-170px;border:1px solid rgba(199,233,189,.08);border-radius:50%;box-shadow:0 0 0 65px rgba(199,233,189,.019),0 0 0 145px rgba(199,233,189,.015);pointer-events:none}
+    .wrap{position:relative;z-index:1;max-width:1420px;margin:0 auto;padding:26px clamp(22px,5vw,74px) 24px;min-height:100vh;display:flex;flex-direction:column}
+    header{display:flex;align-items:center;justify-content:space-between;gap:20px;padding-bottom:24px;border-bottom:1px solid var(--line)}
+    .brand{display:flex;gap:14px;align-items:center}
+    .mark{width:38px;height:38px;border:1px solid rgba(169,221,178,.58);border-radius:10px;display:grid;place-items:center;background:rgba(155,213,171,.07);transform:rotate(-5deg)}
+    .mark:after{content:"";width:17px;height:17px;border:3px solid var(--green);border-right-color:transparent;border-bottom-color:var(--gold);transform:rotate(45deg);border-radius:3px}
+    .brand-title{font-weight:850;letter-spacing:.19em;font-size:15px;color:#eaf6ed}
+    .brand-sub{font-size:10px;letter-spacing:.20em;text-transform:uppercase;color:#8fae99;margin-top:4px}
+    .right-head{display:flex;align-items:center;gap:18px}
+    .beta{display:flex;align-items:center;gap:8px;padding:9px 12px;border:1px solid rgba(225,204,140,.32);border-radius:6px;color:#f1da9e;background:rgba(229,202,134,.04);font-size:10px;font-weight:750;letter-spacing:.16em;white-space:nowrap}
+    .beta:before{content:"";background:var(--gold);width:5px;height:5px;border-radius:50%;box-shadow:0 0 10px var(--gold)}
+    .langs{display:flex;gap:4px;border:1px solid var(--line);padding:4px;border-radius:7px;background:rgba(0,0,0,.12)}
+    .langs button{cursor:pointer;background:transparent;border:0;color:#9bb5a5;font-size:11px;font-weight:800;letter-spacing:.06em;padding:8px 10px;border-radius:4px}
+    .langs button.active{color:#10241a;background:var(--green)}
+    main{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(320px,.95fr);gap:clamp(24px,5vw,76px);align-items:center;flex:1;padding:clamp(28px,4vw,52px) 0 32px}
+    .eyebrow{color:var(--green);font-size:11px;font-weight:800;letter-spacing:.26em;text-transform:uppercase;display:flex;align-items:center;gap:10px;margin:0 0 20px}
+    .eyebrow:before{content:"";display:block;width:28px;height:1px;background:var(--green2)}
+    h1{font-size:clamp(43px,5.2vw,79px);line-height:1.05;letter-spacing:-.055em;margin:0;max-width:720px;font-weight:830}
+    h1 em{font-style:normal;color:var(--green)}
+    .lead{font-size:clamp(14px,1.3vw,17px);color:#aec7b8;max-width:570px;line-height:1.72;margin:25px 0 28px}
+    .modes{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:34px}
+    .mode{display:flex;align-items:center;gap:8px;padding:10px 13px;background:rgba(30,69,50,.62);border:1px solid rgba(173,219,177,.22);border-radius:7px;color:#d1e8d3;font-size:12px;font-weight:750;letter-spacing:.08em}
+    .mode b{color:var(--gold);font-weight:750;font-size:12px}
+    .progress-card{background:linear-gradient(145deg,rgba(18,50,36,.94),rgba(13,34,28,.94));border:1px solid rgba(154,210,171,.27);border-radius:12px;padding:20px 22px;max-width:574px;box-shadow:0 20px 80px rgba(0,0,0,.12)}
+    .progress-top{display:flex;align-items:center;justify-content:space-between;gap:20px}
+    .progress-top h2{font-size:12px;letter-spacing:.19em;margin:0;font-weight:800;color:#d7efda}
+    .animated-dots{display:flex;gap:5px}
+    .animated-dots i{display:block;width:5px;height:5px;background:var(--green);border-radius:50%;opacity:.3;animation:pulse 1.2s infinite}
+    .animated-dots i:nth-child(2){animation-delay:.2s}.animated-dots i:nth-child(3){animation-delay:.4s}
+    @keyframes pulse{0%,80%,100%{opacity:.2}40%{opacity:1}}
+    .status{font-size:13px;margin:15px 0 13px;color:#acbfb0;min-height:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .bar{height:5px;background:rgba(177,216,188,.14);border-radius:12px;overflow:hidden}
+    .fill{width:12%;height:100%;background:linear-gradient(90deg,#6caf8c,#c4e8b6);border-radius:12px;transition:width .3s ease}
+    .meta{display:flex;justify-content:space-between;gap:18px;font-size:11px;color:#849f90;margin-top:12px}
+    .info-label{color:#b0cdb9}
+    .rules{background:linear-gradient(160deg,rgba(25,57,44,.81),rgba(11,34,26,.88));border:1px solid rgba(164,205,177,.20);padding:25px 27px 12px;border-radius:14px;box-shadow:0 20px 80px rgba(0,0,0,.12)}
+    .rules-top{display:flex;gap:14px;align-items:start;justify-content:space-between;margin-bottom:7px}
+    .rules-sub{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);font-weight:750}
+    h2.rules-title{font-size:clamp(23px,2.5vw,32px);font-weight:800;letter-spacing:-.03em;margin:8px 0 17px}
+    .rules-count{font-size:12px;color:#b8cfbc;border:1px solid var(--line);padding:6px 8px;border-radius:6px;white-space:nowrap}
+    .rule{display:grid;grid-template-columns:35px 1fr;gap:12px;align-items:start;padding:14px 0;border-top:1px solid rgba(178,220,182,.13)}
+    .num{font-size:11px;color:var(--gold);font-weight:850;margin-top:2px;letter-spacing:.08em}
+    .rtitle{font-size:13px;font-weight:780;color:#e3f1e6;margin:0 0 4px}
+    .rtext{font-size:12px;color:#a4bcad;line-height:1.55;margin:0}
+    .rules-note{font-size:11px;color:#97b6a0;border-top:1px solid rgba(178,220,182,.13);padding:14px 0 2px;line-height:1.6}
+    footer{display:flex;justify-content:space-between;gap:16px;align-items:center;border-top:1px solid var(--line);padding-top:19px;color:#819b8d;font-size:11px;letter-spacing:.03em}
+    .footer-right{color:#b2c9b7}
+    @media(max-width:900px){main{grid-template-columns:1fr;align-items:start;gap:35px}h1{font-size:clamp(42px,8vw,68px)}.rules{max-width:690px}.wrap{padding:24px 28px}}
+    @media(max-width:540px){.wrap{padding:17px 17px 22px}header{align-items:start;gap:10px}.right-head{gap:8px;flex-direction:column;align-items:flex-end}.beta{font-size:9px;padding:7px 9px}.langs button{padding:6px 8px}main{padding-top:30px}h1{font-size:42px}.rules{padding:20px 19px 10px}.brand-sub{font-size:8px}.brand-title{font-size:12px}.mark{width:32px;height:32px}footer{align-items:start;flex-direction:column}}
+    @media(prefers-reduced-motion:reduce){*{animation-duration:0s!important;transition:none!important}}
+  
+    /* V0.2 -- no mouse controls: the game supplies the language */
+    .right-head {justify-content:flex-end}
+    .rules {padding:21px 26px 11px}
+    .rule {padding:11px 0;grid-template-columns:30px 1fr;gap:10px}
+    .rtitle {font-size:12px;margin:0 0 3px}
+    .rtext {font-size:11.2px;line-height:1.43}
+    .rules-note {padding:11px 0 2px}
+    .rules-title {margin-bottom:12px!important}
+    .lead {margin-top:20px;margin-bottom:23px}
+    .modes {margin-bottom:26px}
+    .notice {color:#c9e0ca;font-size:12px;line-height:1.5;border-left:2px solid var(--gold);padding-left:12px;margin:17px 0 0;max-width:500px}
+    @media (max-height:820px) and (min-width:901px) {
+      .wrap {padding-top:16px;padding-bottom:13px}
+      header {padding-bottom:14px}
+      main {padding:15px 0 15px;gap:32px}
+      h1 {font-size:clamp(42px,4.6vw,67px)}
+      .eyebrow {margin-bottom:13px}
+      .lead {margin:15px 0 17px;font-size:14px;line-height:1.55}
+      .modes {margin-bottom:18px}
+      .mode {padding:8px 10px}
+      .progress-card {padding:14px 16px}
+      .rules {padding:15px 21px 8px}
+      .rule {padding:7px 0}
+      .rules-top {margin-bottom:3px}
+      .rules-title {margin:5px 0 8px!important;font-size:25px!important}
+      .rules-note {padding-top:8px;font-size:10px}
+      footer {padding-top:10px}
+    }
+    @media(max-width:900px){.rules{max-width:none}}
+    @media(max-width:540px){.notice{font-size:11px}}
+</style>
+</head>
+<body>
+<div class="orb" aria-hidden="true"></div>
+<div class="wrap">
+<header>
+  <div class="brand"><div class="mark" aria-hidden="true"></div><div><div class="brand-title">SANDBOX<span style="color:var(--gold)"> / </span>TEST</div><div class="brand-sub">BUILD • PVP • CREATE</div></div></div>
+  <div class="right-head"><div class="beta" data-i18n="badge">BETA • ТЕСТИРОВАНИЕ</div></div>
+</header>
+<main>
+<section>
+  <p class="eyebrow" data-i18n="eyebrow">СВОБОДНЫЙ SANDBOX • BUILD &amp; PVP</p>
+  <h1 data-i18n-html="hero">Строй. <em>Испытывай.</em><br>Сражайся.</h1>
+  <p class="lead" data-i18n="lead">Строй базы, создавай механизмы в Wiremod, собирай команды и участвуй в честном PvP. Здесь ценят творчество и свободу.</p>
+  <div class="modes"><div class="mode"><b>!build</b> <span data-i18n="buildcmd">строительство</span></div><div class="mode"><b>!pvp</b> <span data-i18n="pvpcmd">сражения</span></div><div class="mode"><b>!hud</b> <span data-i18n="hudcmd">интерфейс</span></div></div>
+  <div class="progress-card" role="status" aria-live="polite">
+     <div class="progress-top"><h2 data-i18n="connecting">ПОДКЛЮЧЕНИЕ К СЕРВЕРУ</h2><div class="animated-dots" aria-hidden="true"><i></i><i></i><i></i></div></div>
+     <p class="status" id="status" data-i18n="status">Подготавливаем игровые файлы…</p>
+     <div class="bar" aria-hidden="true"><div class="fill" id="fill"></div></div>
+     <div class="meta"><span id="filecount" data-i18n="filecount">Ожидание данных загрузки</span><span><span data-i18n="map">КАРТА</span>: <span id="mapname" class="info-label">gm_bigcity_improved</span></span></div>
+  </div>
+  <p class="notice" data-i18n="notice">Сервер в открытом тестировании: ошибки возможны, правила и настройки могут изменяться.</p>
+</section>
+<aside class="rules">
+  <div class="rules-top"><div><div class="rules-sub" data-i18n="smallrules">ГЛАВНОЕ ПЕРЕД ИГРОЙ</div><h2 class="rules-title" data-i18n="rulestitle">Правила сервера</h2></div><span class="rules-count">01 — 06</span></div>
+        <div class="rule"><div class="num">01</div><div><h3 class="rtitle" data-i18n="r1t">Не ломай сервер</h3><p class="rtext" data-i18n="r1">Запрещены намеренные краши, лаг-машины, спам пропами и вредоносные дубликаты.</p></div></div>
+        <div class="rule"><div class="num">02</div><div><h3 class="rtitle" data-i18n="r2t">Честное PvP</h3><p class="rtext" data-i18n="r2">Без читов, WH, E2-радаров и других способов получить нечестное преимущество.</p></div></div>
+        <div class="rule"><div class="num">03</div><div><h3 class="rtitle" data-i18n="r3t">Build и PvP — отдельно</h3><p class="rtext" data-i18n="r3">Билдеры не мешают боям, PvP-игроки — строителям. Build не даёт преимуществ в бою.</p></div></div>
+        <div class="rule"><div class="num">04</div><div><h3 class="rtitle" data-i18n="r4t">Не мешай другим</h3><p class="rtext" data-i18n="r4">Не блокируй спавн и выходы, не делай проп-пуш и проп-блок, не гриферствуй в Build.</p></div></div>
+        <div class="rule"><div class="num">05</div><div><h3 class="rtitle" data-i18n="r5t">Без опасных механизмов</h3><p class="rtext" data-i18n="r5">Запрещены перегружающие сервер E2, скрытые неуязвимые турели и техника без уязвимого корпуса.</p></div></div>
+        <div class="rule"><div class="num">06</div><div><h3 class="rtitle" data-i18n="r6t">Уважай игроков</h3><p class="rtext" data-i18n="r6">Без травли, угроз, чат- и звукового спама. Нашёл серьёзную ошибку — сообщи админу.</p></div></div>
+  <p class="rules-note" data-i18n="note">PvP-разрушения в бою разрешены по правилам сервера. Администраторы тоже обязаны играть честно.</p>
+</aside>
+</main>
+<footer><span data-i18n="footerleft">СВОБОДА СТРОИТЬ • ЧЕСТНЫЙ БОЙ</span><span class="footer-right" data-i18n="footerright">Спасибо за участие в тестировании!</span></footer>
+</div>
+<script>
+(function(){
+'use strict';
+var translations = {"ru":{"badge":"BETA • ТЕСТИРОВАНИЕ","eyebrow":"СВОБОДНЫЙ SANDBOX • BUILD & PVP","hero":"Строй. <em>Испытывай.</em><br>Сражайся.","lead":"Строй базы, создавай механизмы в Wiremod, собирай команды и участвуй в честном PvP. Здесь ценят творчество и свободу.","buildcmd":"строительство","pvpcmd":"сражения","hudcmd":"интерфейс","notice":"Сервер в открытом тестировании: ошибки возможны, правила и настройки могут изменяться.","connecting":"ПОДКЛЮЧЕНИЕ К СЕРВЕРУ","status":"Подготавливаем игровые файлы…","filecount":"Ожидание данных загрузки","map":"КАРТА","files":"Файлы: ","smallrules":"ГЛАВНОЕ ПЕРЕД ИГРОЙ","rulestitle":"Правила сервера","r1t":"Не ломай сервер","r1":"Запрещены намеренные краши, лаг-машины, спам пропами и вредоносные дубликаты.","r2t":"Честное PvP","r2":"Без читов, WH, E2-радаров и других способов получить нечестное преимущество.","r3t":"Build и PvP — отдельно","r3":"Билдеры не мешают боям, PvP-игроки — строителям. Build не даёт преимуществ в бою.","r4t":"Не мешай другим","r4":"Не блокируй спавн и выходы, не делай проп-пуш и проп-блок, не гриферствуй в Build.","r5t":"Без опасных механизмов","r5":"Запрещены перегружающие сервер E2, скрытые неуязвимые турели и техника без уязвимого корпуса.","r6t":"Уважай игроков","r6":"Без травли, угроз, чат- и звукового спама. Нашёл серьёзную ошибку — сообщи админу.","note":"PvP-разрушения в бою разрешены по правилам сервера. Администраторы тоже обязаны играть честно.","footerleft":"СВОБОДА СТРОИТЬ • ЧЕСТНЫЙ БОЙ","footerright":"Спасибо за участие в тестировании!"},"uk":{"badge":"BETA • ТЕСТУВАННЯ","eyebrow":"ВІЛЬНИЙ SANDBOX • BUILD & PVP","hero":"Будуй. <em>Випробовуй.</em><br>Змагайся.","lead":"Будуй бази, створюй механізми у Wiremod, об’єднуйся в команди та грай у чесному PvP. Тут цінують творчість і свободу.","buildcmd":"будівництво","pvpcmd":"бої","hudcmd":"інтерфейс","notice":"Сервер проходить відкрите тестування: можливі помилки, правила й налаштування можуть змінюватися.","connecting":"ПІДКЛЮЧЕННЯ ДО СЕРВЕРА","status":"Підготовка ігрових файлів…","filecount":"Очікування даних завантаження","map":"МАПА","files":"Файли: ","smallrules":"ГОЛОВНЕ ПЕРЕД ГРОЮ","rulestitle":"Правила сервера","r1t":"Не ламай сервер","r1":"Заборонені навмисні краші, лаг-машини, спам пропами та шкідливі дублікати.","r2t":"Чесне PvP","r2":"Без читів, WH, E2-радарів та інших способів отримати нечесну перевагу.","r3t":"Build і PvP — окремо","r3":"Будівельники не заважають боям, PvP-гравці — будівельникам. Build не дає переваг у бою.","r4t":"Не заважай іншим","r4":"Не блокуй спавн і виходи, не роби проп-пуш чи проп-блок, не заважай чужим спорудам у Build.","r5t":"Без небезпечних механізмів","r5":"Заборонені E2, що перевантажують сервер, приховані невразливі турелі й техніка без вразливого корпусу.","r6t":"Поважай гравців","r6":"Без цькування, погроз, спаму в чаті та звукового спаму. Знайшов серйозну помилку — повідом адміністратора.","note":"Руйнування під час PvP дозволені в межах правил сервера. Адміністратори також мають грати чесно.","footerleft":"СВОБОДА БУДУВАТИ • ЧЕСНИЙ БІЙ","footerright":"Дякуємо за участь у тестуванні!"},"en":{"badge":"BETA • PLAYTEST","eyebrow":"OPEN SANDBOX • BUILD & PVP","hero":"Build. <em>Experiment.</em><br>Compete.","lead":"Build bases, create Wiremod contraptions, team up, and enjoy fair PvP. Creativity and freedom come first.","buildcmd":"create and build","pvpcmd":"combat","hudcmd":"HUD","notice":"Public testing is in progress. Bugs may occur, and rules and settings may change.","connecting":"CONNECTING TO SERVER","status":"Preparing game files…","filecount":"Waiting for download data","map":"MAP","files":"Files: ","smallrules":"BEFORE YOU PLAY","rulestitle":"Server rules","r1t":"Do not crash the server","r1":"No intentional crashes, lag machines, prop spam, or malicious duplications.","r2t":"Fair PvP","r2":"No cheats, wallhacks, E2 radars, or other unfair combat advantages.","r3t":"Keep Build and PvP separate","r3":"Builders must not interfere with fights, and PvP players must not harass builders. No Build-mode exploits in combat.","r4t":"Let others play","r4":"Do not block spawn or exits, prop-push or prop-block players, or grief Build-mode creations.","r5t":"No abusive contraptions","r5":"No server-overloading E2, hidden invulnerable turrets, or combat vehicles without a vulnerable hitbox.","r6t":"Respect players","r6":"No harassment, threats, chat or sound spam. Report serious bugs to an admin.","note":"Base destruction during legitimate PvP is allowed within server rules. Admins must play fair, too.","footerleft":"FREEDOM TO BUILD • FAIR COMBAT","footerright":"Thanks for helping test the server!"}};
+var lang='en',statusSet=false,totalFiles=0,neededFiles=null;
+function normalizeLang(value){
+  var s=String(value||'').trim().toLowerCase();
+  if(s==='ua'||s==='uk'||s==='ukrainian'||s.indexOf('uk-')===0)return 'uk';
+  if(s==='ru'||s==='russian'||s.indexOf('ru-')===0)return 'ru';
+  return 'en';
+}
+function setLang(l){
+  lang=normalizeLang(l);
+  var t=translations[lang];document.documentElement.lang=lang;
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    if(el.id==='status'&&statusSet)return;
+    if(el.id==='filecount'&&totalFiles>0)return;
+    el.textContent=t[el.getAttribute('data-i18n')]||'';
+  });
+  document.querySelectorAll('[data-i18n-html]').forEach(function(el){
+    // Only predefined constant translations, never user or server input.
+    el.innerHTML=t[el.getAttribute('data-i18n-html')]||'';
+  });
+  updateFiles();
+}
+function updateFiles(){
+  if(!totalFiles)return;
+  var done=neededFiles===null?0:Math.max(0,totalFiles-neededFiles);
+  var pct=Math.round(done*100/totalFiles);
+  document.getElementById('filecount').textContent=translations[lang].files+done+' / '+totalFiles;
+  document.getElementById('fill').style.width=Math.max(3,Math.min(100,pct))+'%';
+}
+// The game sends the joining player's GMod UI language (gmod_language).
+// No clicks or keyboard interaction are required on the loading screen.
+window.GameDetails=function(servername,serverurl,mapname,maxplayers,steamid,gamemode,volume,language){
+  if(mapname)document.getElementById('mapname').textContent=String(mapname).slice(0,80);
+  if(language)setLang(language);
+};
+window.SetStatusChanged=function(status){if(status){statusSet=true;document.getElementById('status').textContent=String(status).slice(0,180)}};
+window.SetFilesTotal=function(n){var x=Number(n);if(isFinite(x)&&x>0){totalFiles=x;updateFiles()}};
+window.SetFilesNeeded=function(n){var x=Number(n);if(isFinite(x)&&x>=0){neededFiles=x;updateFiles()}};
+window.DownloadingFile=function(filename){if(!statusSet&&filename)document.getElementById('status').textContent=String(filename).slice(0,120)};
+// Normal browser preview: prefer browser language. GameDetails overrides it.
+var params=new URLSearchParams(window.location.search);
+setLang(params.has('preview_lang')?params.get('preview_lang'):(navigator.language||'en'));
+})();
+</script>
+</body>
+</html>

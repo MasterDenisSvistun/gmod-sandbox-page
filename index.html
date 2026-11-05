@@ -1,11 +1,11 @@
 <!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#0b211b">
-  <title>Sandbox — Build / PvP / Create</title>
-  <style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b211b">
+<title>Sandbox Test — Build / PvP</title>
+<style>
     :root { --bg:#091c17; --bg2:#102b23; --panel:rgba(20,45,37,.86); --panel2:rgba(10,32,26,.80); --line:rgba(161,206,181,.19); --ink:#e9f1e7; --muted:#a0b7a9; --green:#a9ddb2; --green2:#61aa88; --gold:#e5ca86; }
     *{box-sizing:border-box}
     html{min-height:100%;background:var(--bg)}
@@ -61,58 +61,118 @@
     @media(max-width:900px){main{grid-template-columns:1fr;align-items:start;gap:35px}h1{font-size:clamp(42px,8vw,68px)}.rules{max-width:690px}.wrap{padding:24px 28px}}
     @media(max-width:540px){.wrap{padding:17px 17px 22px}header{align-items:start;gap:10px}.right-head{gap:8px;flex-direction:column;align-items:flex-end}.beta{font-size:9px;padding:7px 9px}.langs button{padding:6px 8px}main{padding-top:30px}h1{font-size:42px}.rules{padding:20px 19px 10px}.brand-sub{font-size:8px}.brand-title{font-size:12px}.mark{width:32px;height:32px}footer{align-items:start;flex-direction:column}}
     @media(prefers-reduced-motion:reduce){*{animation-duration:0s!important;transition:none!important}}
-  </style>
+  
+    /* V0.2 -- no mouse controls: the game supplies the language */
+    .right-head {justify-content:flex-end}
+    .rules {padding:21px 26px 11px}
+    .rule {padding:11px 0;grid-template-columns:30px 1fr;gap:10px}
+    .rtitle {font-size:12px;margin:0 0 3px}
+    .rtext {font-size:11.2px;line-height:1.43}
+    .rules-note {padding:11px 0 2px}
+    .rules-title {margin-bottom:12px!important}
+    .lead {margin-top:20px;margin-bottom:23px}
+    .modes {margin-bottom:26px}
+    .notice {color:#c9e0ca;font-size:12px;line-height:1.5;border-left:2px solid var(--gold);padding-left:12px;margin:17px 0 0;max-width:500px}
+    @media (max-height:820px) and (min-width:901px) {
+      .wrap {padding-top:16px;padding-bottom:13px}
+      header {padding-bottom:14px}
+      main {padding:15px 0 15px;gap:32px}
+      h1 {font-size:clamp(42px,4.6vw,67px)}
+      .eyebrow {margin-bottom:13px}
+      .lead {margin:15px 0 17px;font-size:14px;line-height:1.55}
+      .modes {margin-bottom:18px}
+      .mode {padding:8px 10px}
+      .progress-card {padding:14px 16px}
+      .rules {padding:15px 21px 8px}
+      .rule {padding:7px 0}
+      .rules-top {margin-bottom:3px}
+      .rules-title {margin:5px 0 8px!important;font-size:25px!important}
+      .rules-note {padding-top:8px;font-size:10px}
+      footer {padding-top:10px}
+    }
+    @media(max-width:900px){.rules{max-width:none}}
+    @media(max-width:540px){.notice{font-size:11px}}
+</style>
 </head>
 <body>
 <div class="orb" aria-hidden="true"></div>
 <div class="wrap">
-  <header>
-    <div class="brand"><div class="mark" aria-hidden="true"></div><div><div class="brand-title">SANDBOX<span style="color:var(--gold)"> / </span>TEST</div><div class="brand-sub">BUILD • PVP • CREATE</div></div></div>
-    <div class="right-head"><div class="beta" data-i18n="badge">ОТКРЫТЫЙ ТЕСТ</div><div class="langs" aria-label="Language"><button data-lang="uk" type="button">UA</button><button data-lang="ru" type="button" class="active">RU</button><button data-lang="en" type="button">EN</button></div></div>
-  </header>
-  <main>
-    <section>
-      <p class="eyebrow" data-i18n="eyebrow">НЕ ПРОСТО ЕЩЁ ОДИН SANDBOX</p>
-      <h1 data-i18n-html="hero">Строй. <em>Испытывай.</em><br>Сражайся.</h1>
-      <p class="lead" data-i18n="lead">Свободная песочница Garry's Mod: создавай базы, собирай механизмы в Wiremod, объединяйся с другими и участвуй в честном PvP. Без лишней бюрократии.</p>
-      <div class="modes"><div class="mode"><b>!build</b> <span data-i18n="buildcmd">строительство и полёт</span></div><div class="mode"><b>!pvp</b> <span data-i18n="pvpcmd">бои и базы</span></div><div class="mode"><b>!hud</b> <span data-i18n="hudcmd">интерфейс</span></div></div>
-      <div class="progress-card" role="status" aria-live="polite">
-        <div class="progress-top"><h2 data-i18n="connecting">ПОДКЛЮЧЕНИЕ К СЕРВЕРУ</h2><div class="animated-dots" aria-hidden="true"><i></i><i></i><i></i></div></div>
-        <p class="status" id="status" data-i18n="status">Подготавливаем игровые файлы…</p>
-        <div class="bar" aria-hidden="true"><div class="fill" id="fill"></div></div>
-        <div class="meta"><span id="filecount" data-i18n="filecount">Ожидание данных загрузки</span><span><span data-i18n="map">КАРТА</span>: <span id="mapname" class="info-label">gm_bigcity_improved</span></span></div>
-      </div>
-    </section>
-    <aside class="rules">
-      <div class="rules-top"><div><div class="rules-sub" data-i18n="smallrules">ПЕРЕД ИГРОЙ</div><h2 class="rules-title" data-i18n="rulestitle">Правила сервера</h2></div><span class="rules-count">01 — 05</span></div>
-      <div class="rule"><div class="num">01</div><div><h3 class="rtitle" data-i18n="r1t">Не ломай сервер</h3><p class="rtext" data-i18n="r1">Запрещены намеренные краши, спам пропами, лаг-машины и вредоносные дубликаты.</p></div></div>
-      <div class="rule"><div class="num">02</div><div><h3 class="rtitle" data-i18n="r2t">Build — для творчества</h3><p class="rtext" data-i18n="r2">Строй где хочешь, но не используй Build или его объекты для получения преимущества в PvP.</p></div></div>
-      <div class="rule"><div class="num">03</div><div><h3 class="rtitle" data-i18n="r3t">Не мешай другим играть</h3><p class="rtext" data-i18n="r3">Не блокируй спавн и выходы, не уничтожай чужие постройки обходными способами.</p></div></div>
-      <div class="rule"><div class="num">04</div><div><h3 class="rtitle" data-i18n="r4t">Уважай игроков</h3><p class="rtext" data-i18n="r4">Без травли, угроз, массового спама и целенаправленного преследования.</p></div></div>
-      <div class="rule"><div class="num">05</div><div><h3 class="rtitle" data-i18n="r5t">Нашёл ошибку — сообщи</h3><p class="rtext" data-i18n="r5">Не злоупотребляй уязвимостями. Расскажи администрации — мы исправим их.</p></div></div>
-      <p class="rules-note" data-i18n="note">Сервер в тестировании. Настройки могут меняться; конструктивные предложения приветствуются.</p>
-    </aside>
-  </main>
-  <footer><span data-i18n="footerleft">СВОБОДА СОЗДАВАТЬ • ЧЕСТНЫЕ ПРАВИЛА</span><span class="footer-right" data-i18n="footerright">Спасибо, что тестируете сервер вместе с нами.</span></footer>
+<header>
+  <div class="brand"><div class="mark" aria-hidden="true"></div><div><div class="brand-title">SANDBOX<span style="color:var(--gold)"> / </span>TEST</div><div class="brand-sub">BUILD • PVP • CREATE</div></div></div>
+  <div class="right-head"><div class="beta" data-i18n="badge">BETA • ТЕСТИРОВАНИЕ</div></div>
+</header>
+<main>
+<section>
+  <p class="eyebrow" data-i18n="eyebrow">СВОБОДНЫЙ SANDBOX • BUILD &amp; PVP</p>
+  <h1 data-i18n-html="hero">Строй. <em>Испытывай.</em><br>Сражайся.</h1>
+  <p class="lead" data-i18n="lead">Строй базы, создавай механизмы в Wiremod, собирай команды и участвуй в честном PvP. Здесь ценят творчество и свободу.</p>
+  <div class="modes"><div class="mode"><b>!build</b> <span data-i18n="buildcmd">строительство</span></div><div class="mode"><b>!pvp</b> <span data-i18n="pvpcmd">сражения</span></div><div class="mode"><b>!hud</b> <span data-i18n="hudcmd">интерфейс</span></div></div>
+  <div class="progress-card" role="status" aria-live="polite">
+     <div class="progress-top"><h2 data-i18n="connecting">ПОДКЛЮЧЕНИЕ К СЕРВЕРУ</h2><div class="animated-dots" aria-hidden="true"><i></i><i></i><i></i></div></div>
+     <p class="status" id="status" data-i18n="status">Подготавливаем игровые файлы…</p>
+     <div class="bar" aria-hidden="true"><div class="fill" id="fill"></div></div>
+     <div class="meta"><span id="filecount" data-i18n="filecount">Ожидание данных загрузки</span><span><span data-i18n="map">КАРТА</span>: <span id="mapname" class="info-label">gm_bigcity_improved</span></span></div>
+  </div>
+  <p class="notice" data-i18n="notice">Сервер в открытом тестировании: ошибки возможны, правила и настройки могут изменяться.</p>
+</section>
+<aside class="rules">
+  <div class="rules-top"><div><div class="rules-sub" data-i18n="smallrules">ГЛАВНОЕ ПЕРЕД ИГРОЙ</div><h2 class="rules-title" data-i18n="rulestitle">Правила сервера</h2></div><span class="rules-count">01 — 06</span></div>
+        <div class="rule"><div class="num">01</div><div><h3 class="rtitle" data-i18n="r1t">Не ломай сервер</h3><p class="rtext" data-i18n="r1">Запрещены намеренные краши, лаг-машины, спам пропами и вредоносные дубликаты.</p></div></div>
+        <div class="rule"><div class="num">02</div><div><h3 class="rtitle" data-i18n="r2t">Честное PvP</h3><p class="rtext" data-i18n="r2">Без читов, WH, E2-радаров и других способов получить нечестное преимущество.</p></div></div>
+        <div class="rule"><div class="num">03</div><div><h3 class="rtitle" data-i18n="r3t">Build и PvP — отдельно</h3><p class="rtext" data-i18n="r3">Билдеры не мешают боям, PvP-игроки — строителям. Build не даёт преимуществ в бою.</p></div></div>
+        <div class="rule"><div class="num">04</div><div><h3 class="rtitle" data-i18n="r4t">Не мешай другим</h3><p class="rtext" data-i18n="r4">Не блокируй спавн и выходы, не делай проп-пуш и проп-блок, не гриферствуй в Build.</p></div></div>
+        <div class="rule"><div class="num">05</div><div><h3 class="rtitle" data-i18n="r5t">Без опасных механизмов</h3><p class="rtext" data-i18n="r5">Запрещены перегружающие сервер E2, скрытые неуязвимые турели и техника без уязвимого корпуса.</p></div></div>
+        <div class="rule"><div class="num">06</div><div><h3 class="rtitle" data-i18n="r6t">Уважай игроков</h3><p class="rtext" data-i18n="r6">Без травли, угроз, чат- и звукового спама. Нашёл серьёзную ошибку — сообщи админу.</p></div></div>
+  <p class="rules-note" data-i18n="note">PvP-разрушения в бою разрешены по правилам сервера. Администраторы тоже обязаны играть честно.</p>
+</aside>
+</main>
+<footer><span data-i18n="footerleft">СВОБОДА СТРОИТЬ • ЧЕСТНЫЙ БОЙ</span><span class="footer-right" data-i18n="footerright">Спасибо за участие в тестировании!</span></footer>
 </div>
 <script>
 (function(){
 'use strict';
-var translations={
-ru:{badge:'ОТКРЫТЫЙ ТЕСТ',eyebrow:'НЕ ПРОСТО ЕЩЁ ОДИН SANDBOX',hero:'Строй. <em>Испытывай.</em><br>Сражайся.',lead:'Свободная песочница Garry\'s Mod: создавай базы, собирай механизмы в Wiremod, объединяйся с другими и участвуй в честном PvP. Без лишней бюрократии.',buildcmd:'строительство и полёт',pvpcmd:'бои и базы',hudcmd:'интерфейс',connecting:'ПОДКЛЮЧЕНИЕ К СЕРВЕРУ',status:'Подготавливаем игровые файлы…',filecount:'Ожидание данных загрузки',map:'КАРТА',smallrules:'ПЕРЕД ИГРОЙ',rulestitle:'Правила сервера',r1t:'Не ломай сервер',r1:'Запрещены намеренные краши, спам пропами, лаг-машины и вредоносные дубликаты.',r2t:'Build — для творчества',r2:'Строй где хочешь, но не используй Build или его объекты для получения преимущества в PvP.',r3t:'Не мешай другим играть',r3:'Не блокируй спавн и выходы, не уничтожай чужие постройки обходными способами.',r4t:'Уважай игроков',r4:'Без травли, угроз, массового спама и целенаправленного преследования.',r5t:'Нашёл ошибку — сообщи',r5:'Не злоупотребляй уязвимостями. Расскажи администрации — мы исправим их.',note:'Сервер в тестировании. Настройки могут меняться; конструктивные предложения приветствуются.',footerleft:'СВОБОДА СОЗДАВАТЬ • ЧЕСТНЫЕ ПРАВИЛА',footerright:'Спасибо, что тестируете сервер вместе с нами.',files:'Файлы: '},
-uk:{badge:'ВІДКРИТИЙ ТЕСТ',eyebrow:'НЕ ПРОСТО ЩЕ ОДИН SANDBOX',hero:'Будуй. <em>Випробовуй.</em><br>Змагайся.',lead:'Вільна пісочниця Garry\'s Mod: будуй бази, створюй механізми у Wiremod, об\'єднуйся з іншими та грай у чесному PvP. Без зайвих обмежень.',buildcmd:'будівництво й політ',pvpcmd:'битви й бази',hudcmd:'інтерфейс',connecting:'ПІДКЛЮЧЕННЯ ДО СЕРВЕРА',status:'Підготовка ігрових файлів…',filecount:'Очікування даних завантаження',map:'МАПА',smallrules:'ПЕРЕД ГРОЮ',rulestitle:'Правила сервера',r1t:'Не ламай сервер',r1:'Заборонені навмисні краші, спам пропами, лаг-машини та шкідливі дублікати.',r2t:'Build — для творчості',r2:'Будуй де завгодно, але не використовуй Build або його об’єкти для переваги у PvP.',r3t:'Не заважай іншим грати',r3:'Не блокуй спавн і виходи, не нищ чужі споруди обхідними способами.',r4t:'Поважай гравців',r4:'Без цькування, погроз, масового спаму й навмисного переслідування.',r5t:'Знайшов помилку — повідом',r5:'Не зловживай уразливостями. Розкажи адміністрації — ми їх виправимо.',note:'Сервер тестується. Налаштування можуть змінюватися; корисні пропозиції вітаються.',footerleft:'СВОБОДА ТВОРИТИ • ЧЕСНІ ПРАВИЛА',footerright:'Дякуємо, що тестуєте сервер разом із нами.',files:'Файли: '},
-en:{badge:'PUBLIC TEST',eyebrow:'MORE THAN JUST ANOTHER SANDBOX',hero:'Build. <em>Experiment.</em><br>Compete.',lead:'A free Garry\'s Mod sandbox: build bases, invent with Wiremod, team up with others, and enjoy fair PvP. Creativity first, unnecessary restrictions last.',buildcmd:'build and fly',pvpcmd:'combat and bases',hudcmd:'interface',connecting:'CONNECTING TO SERVER',status:'Preparing game files…',filecount:'Waiting for loading data',map:'MAP',smallrules:'BEFORE YOU PLAY',rulestitle:'Server rules',r1t:'Do not crash the server',r1:'No deliberate crashes, prop spam, lag machines, or malicious duplications.',r2t:'Build is for creativity',r2:'Build anywhere, but do not use Build or its objects to gain an unfair PvP advantage.',r3t:'Let others play',r3:'Do not block spawn and exits, or bypass protection to destroy others’ builds.',r4t:'Respect other players',r4:'No harassment, threats, mass spam, or targeted abuse.',r5t:'Found a bug? Report it',r5:'Do not exploit vulnerabilities. Tell an admin so we can fix them.',note:'This server is in testing. Settings may change; constructive feedback is welcome.',footerleft:'FREEDOM TO CREATE • FAIR PLAY',footerright:'Thanks for helping us test the server.',files:'Files: '}
+var translations = {"ru":{"badge":"BETA • ТЕСТИРОВАНИЕ","eyebrow":"СВОБОДНЫЙ SANDBOX • BUILD & PVP","hero":"Строй. <em>Испытывай.</em><br>Сражайся.","lead":"Строй базы, создавай механизмы в Wiremod, собирай команды и участвуй в честном PvP. Здесь ценят творчество и свободу.","buildcmd":"строительство","pvpcmd":"сражения","hudcmd":"интерфейс","notice":"Сервер в открытом тестировании: ошибки возможны, правила и настройки могут изменяться.","connecting":"ПОДКЛЮЧЕНИЕ К СЕРВЕРУ","status":"Подготавливаем игровые файлы…","filecount":"Ожидание данных загрузки","map":"КАРТА","files":"Файлы: ","smallrules":"ГЛАВНОЕ ПЕРЕД ИГРОЙ","rulestitle":"Правила сервера","r1t":"Не ломай сервер","r1":"Запрещены намеренные краши, лаг-машины, спам пропами и вредоносные дубликаты.","r2t":"Честное PvP","r2":"Без читов, WH, E2-радаров и других способов получить нечестное преимущество.","r3t":"Build и PvP — отдельно","r3":"Билдеры не мешают боям, PvP-игроки — строителям. Build не даёт преимуществ в бою.","r4t":"Не мешай другим","r4":"Не блокируй спавн и выходы, не делай проп-пуш и проп-блок, не гриферствуй в Build.","r5t":"Без опасных механизмов","r5":"Запрещены перегружающие сервер E2, скрытые неуязвимые турели и техника без уязвимого корпуса.","r6t":"Уважай игроков","r6":"Без травли, угроз, чат- и звукового спама. Нашёл серьёзную ошибку — сообщи админу.","note":"PvP-разрушения в бою разрешены по правилам сервера. Администраторы тоже обязаны играть честно.","footerleft":"СВОБОДА СТРОИТЬ • ЧЕСТНЫЙ БОЙ","footerright":"Спасибо за участие в тестировании!"},"uk":{"badge":"BETA • ТЕСТУВАННЯ","eyebrow":"ВІЛЬНИЙ SANDBOX • BUILD & PVP","hero":"Будуй. <em>Випробовуй.</em><br>Змагайся.","lead":"Будуй бази, створюй механізми у Wiremod, об’єднуйся в команди та грай у чесному PvP. Тут цінують творчість і свободу.","buildcmd":"будівництво","pvpcmd":"бої","hudcmd":"інтерфейс","notice":"Сервер проходить відкрите тестування: можливі помилки, правила й налаштування можуть змінюватися.","connecting":"ПІДКЛЮЧЕННЯ ДО СЕРВЕРА","status":"Підготовка ігрових файлів…","filecount":"Очікування даних завантаження","map":"МАПА","files":"Файли: ","smallrules":"ГОЛОВНЕ ПЕРЕД ГРОЮ","rulestitle":"Правила сервера","r1t":"Не ламай сервер","r1":"Заборонені навмисні краші, лаг-машини, спам пропами та шкідливі дублікати.","r2t":"Чесне PvP","r2":"Без читів, WH, E2-радарів та інших способів отримати нечесну перевагу.","r3t":"Build і PvP — окремо","r3":"Будівельники не заважають боям, PvP-гравці — будівельникам. Build не дає переваг у бою.","r4t":"Не заважай іншим","r4":"Не блокуй спавн і виходи, не роби проп-пуш чи проп-блок, не заважай чужим спорудам у Build.","r5t":"Без небезпечних механізмів","r5":"Заборонені E2, що перевантажують сервер, приховані невразливі турелі й техніка без вразливого корпусу.","r6t":"Поважай гравців","r6":"Без цькування, погроз, спаму в чаті та звукового спаму. Знайшов серйозну помилку — повідом адміністратора.","note":"Руйнування під час PvP дозволені в межах правил сервера. Адміністратори також мають грати чесно.","footerleft":"СВОБОДА БУДУВАТИ • ЧЕСНИЙ БІЙ","footerright":"Дякуємо за участь у тестуванні!"},"en":{"badge":"BETA • PLAYTEST","eyebrow":"OPEN SANDBOX • BUILD & PVP","hero":"Build. <em>Experiment.</em><br>Compete.","lead":"Build bases, create Wiremod contraptions, team up, and enjoy fair PvP. Creativity and freedom come first.","buildcmd":"create and build","pvpcmd":"combat","hudcmd":"HUD","notice":"Public testing is in progress. Bugs may occur, and rules and settings may change.","connecting":"CONNECTING TO SERVER","status":"Preparing game files…","filecount":"Waiting for download data","map":"MAP","files":"Files: ","smallrules":"BEFORE YOU PLAY","rulestitle":"Server rules","r1t":"Do not crash the server","r1":"No intentional crashes, lag machines, prop spam, or malicious duplications.","r2t":"Fair PvP","r2":"No cheats, wallhacks, E2 radars, or other unfair combat advantages.","r3t":"Keep Build and PvP separate","r3":"Builders must not interfere with fights, and PvP players must not harass builders. No Build-mode exploits in combat.","r4t":"Let others play","r4":"Do not block spawn or exits, prop-push or prop-block players, or grief Build-mode creations.","r5t":"No abusive contraptions","r5":"No server-overloading E2, hidden invulnerable turrets, or combat vehicles without a vulnerable hitbox.","r6t":"Respect players","r6":"No harassment, threats, chat or sound spam. Report serious bugs to an admin.","note":"Base destruction during legitimate PvP is allowed within server rules. Admins must play fair, too.","footerleft":"FREEDOM TO BUILD • FAIR COMBAT","footerright":"Thanks for helping test the server!"}};
+var lang='en',statusSet=false,totalFiles=0,neededFiles=null;
+function normalizeLang(value){
+  var s=String(value||'').trim().toLowerCase();
+  if(s==='ua'||s==='uk'||s==='ukrainian'||s.indexOf('uk-')===0)return 'uk';
+  if(s==='ru'||s==='russian'||s.indexOf('ru-')===0)return 'ru';
+  return 'en';
+}
+function setLang(l){
+  lang=normalizeLang(l);
+  var t=translations[lang];document.documentElement.lang=lang;
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    if(el.id==='status'&&statusSet)return;
+    if(el.id==='filecount'&&totalFiles>0)return;
+    el.textContent=t[el.getAttribute('data-i18n')]||'';
+  });
+  document.querySelectorAll('[data-i18n-html]').forEach(function(el){
+    // Only predefined constant translations, never user or server input.
+    el.innerHTML=t[el.getAttribute('data-i18n-html')]||'';
+  });
+  updateFiles();
+}
+function updateFiles(){
+  if(!totalFiles)return;
+  var done=neededFiles===null?0:Math.max(0,totalFiles-neededFiles);
+  var pct=Math.round(done*100/totalFiles);
+  document.getElementById('filecount').textContent=translations[lang].files+done+' / '+totalFiles;
+  document.getElementById('fill').style.width=Math.max(3,Math.min(100,pct))+'%';
+}
+// The game sends the joining player's GMod UI language (gmod_language).
+// No clicks or keyboard interaction are required on the loading screen.
+window.GameDetails=function(servername,serverurl,mapname,maxplayers,steamid,gamemode,volume,language){
+  if(mapname)document.getElementById('mapname').textContent=String(mapname).slice(0,80);
+  if(language)setLang(language);
 };
-var lang='ru', statusSet=false, totalFiles=0, neededFiles=null;
-function setLang(l){if(!translations[l])l='en';lang=l;document.documentElement.lang=l;document.querySelectorAll('[data-i18n]').forEach(function(el){if(el.id==='status'&&statusSet)return;if(el.id==='filecount'&&totalFiles>0)return;el.textContent=translations[l][el.getAttribute('data-i18n')]||''});document.querySelectorAll('[data-i18n-html]').forEach(function(el){var key=el.getAttribute('data-i18n-html');el.innerHTML=translations[l][key]||''});document.querySelectorAll('[data-lang]').forEach(function(el){el.classList.toggle('active',el.getAttribute('data-lang')===l)});updateFiles()}
-function updateFiles(){if(!totalFiles)return;var done=neededFiles===null?0:Math.max(0,totalFiles-neededFiles);var pct=Math.round(done*100/totalFiles);document.getElementById('filecount').textContent=translations[lang].files+done+' / '+totalFiles;document.getElementById('fill').style.width=Math.max(3,Math.min(100,pct))+'%'}
-document.querySelectorAll('[data-lang]').forEach(function(el){el.addEventListener('click',function(){setLang(el.getAttribute('data-lang'))})});
-window.GameDetails=function(servername,serverurl,mapname,maxplayers,steamid,gamemode,volume,language){if(mapname)document.getElementById('mapname').textContent=String(mapname).slice(0,80);if(language==='uk'||language==='ua')setLang('uk');else if(language==='ru')setLang('ru');else if(language==='en')setLang('en')};
 window.SetStatusChanged=function(status){if(status){statusSet=true;document.getElementById('status').textContent=String(status).slice(0,180)}};
 window.SetFilesTotal=function(n){var x=Number(n);if(isFinite(x)&&x>0){totalFiles=x;updateFiles()}};
 window.SetFilesNeeded=function(n){var x=Number(n);if(isFinite(x)&&x>=0){neededFiles=x;updateFiles()}};
 window.DownloadingFile=function(filename){if(!statusSet&&filename)document.getElementById('status').textContent=String(filename).slice(0,120)};
-setLang('ru');
+// Normal browser preview: prefer browser language. GameDetails overrides it.
+var params=new URLSearchParams(window.location.search);
+setLang(params.has('preview_lang')?params.get('preview_lang'):(navigator.language||'en'));
 })();
 </script>
 </body>
